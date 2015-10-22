@@ -50,7 +50,7 @@ public class PicModel {
         this.cluster = cluster;
     }
 
-    public void insertPic(byte[] b, String type, String name, String user) {
+    public String insertPic(byte[] b, String type, String name, String user) {
         try {
             Convertors convertor = new Convertors();
 
@@ -68,6 +68,7 @@ public class PicModel {
             int thumblength= thumbb.length;
             ByteBuffer thumbbuf=ByteBuffer.wrap(thumbb);
             byte[] processedb = picdecolour(picid.toString(),types[1]);
+            //byte[] processedb = b;
             ByteBuffer processedbuf=ByteBuffer.wrap(processedb);
             int processedlength=processedb.length;
             Session session = cluster.connect("instagrim");
@@ -81,10 +82,11 @@ public class PicModel {
             session.execute(bsInsertPic.bind(picid, buffer, thumbbuf,processedbuf, user, DateAdded, length,thumblength,processedlength, type, name));
             session.execute(bsInsertPicToUser.bind(picid, user, DateAdded));
             session.close();
-
+            return picid.toString();
         } catch (IOException ex) {
             System.out.println("Error --> " + ex);
         }
+        return "cant-upload";
     }
 
     public byte[] picresize(String picid,String type) {

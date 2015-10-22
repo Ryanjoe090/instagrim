@@ -146,12 +146,15 @@ public class Image extends HttpServlet {
                 System.out.println("Length : " + b.length);
                 PicModel tm = new PicModel();
                 tm.setCluster(cluster);
-                tm.insertPic(b, type, filename, username);
+                String uuid = tm.insertPic(b, type, filename, username);
 
                 is.close();
+                
+             response.sendRedirect("/Instagrim/Image/"+uuid);
             }
-            RequestDispatcher rd = request.getRequestDispatcher("/upload.jsp");
-             rd.forward(request, response);
+            
+           // RequestDispatcher rd = request.getRequestDispatcher("/upload.jsp");
+           //  rd.forward(request, response);
         }
 
     }
