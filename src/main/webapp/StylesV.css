@@ -13,4 +13,15 @@ nav {
     text-align: left;
     border: 2px;
     float: right;
+    color: red;
+   
 }
+
+header {
+    color: red;
+}
+
+.row {
+    background-color: greenyellow;
+}
+

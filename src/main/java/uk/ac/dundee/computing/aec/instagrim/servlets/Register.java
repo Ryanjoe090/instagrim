@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package uk.ac.dundee.computing.aec.instagrim.servlets;
 
 import com.datastax.driver.core.Cluster;
@@ -25,14 +24,13 @@ import uk.ac.dundee.computing.aec.instagrim.models.User;
  */
 @WebServlet(name = "Register", urlPatterns = {"/Register"})
 public class Register extends HttpServlet {
-    Cluster cluster=null;
+
+    Cluster cluster = null;
+
     public void init(ServletConfig config) throws ServletException {
         // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster();
     }
-
-
-
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -45,15 +43,45 @@ public class Register extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username=request.getParameter("username");
-        String password=request.getParameter("password");
-        
-        User us=new User();
-        us.setCluster(cluster);
-        us.RegisterUser(username, password);
-        
-	response.sendRedirect("/Instagrim");
-        
+        String firstname = request.getParameter("firstname");
+        String secondname = request.getParameter("secondname");
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String rePassword = request.getParameter("rePassword");
+
+        String street = request.getParameter("street");
+        String postcode = request.getParameter("postCode");
+        String city = request.getParameter("city");
+        int num;
+        try {
+            num = Integer.parseInt(postcode);
+        } 
+        catch (Exception e) {
+            System.out.println("PostCode is not an integer!");
+            response.sendRedirect("/Instagrim/register.jsp");
+            return;
+        }
+
+        if (password.equals(rePassword)) {
+            User us = new User();
+            us.setCluster(cluster);
+            us.RegisterUser(username, password, firstname, secondname, email, street, num, city);
+            System.out.println("Success: " + firstname + ' ' + secondname + ' ' + email);
+            response.sendRedirect("/Instagrim");
+
+        } else {
+            System.out.println("Passwords do not match!");
+            response.sendRedirect("/Instagrim/register.jsp");
+
+        }
+
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                RequestDispatcher rd = request.getRequestDispatcher("/register.jsp");
+                        rd.forward(request, response);
     }
 
     /**

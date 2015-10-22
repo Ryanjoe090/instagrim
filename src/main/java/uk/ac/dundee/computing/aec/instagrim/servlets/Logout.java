@@ -25,17 +25,18 @@ import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
  *
  * @author Administrator
  */
-@WebServlet(name = "Login", urlPatterns = {"/Login"})
-public class Login extends HttpServlet {
+@WebServlet(name = "Logout", urlPatterns = {"/Logout","/Logout/","/gtfo"})
+public class Logout extends HttpServlet {
 
     Cluster cluster=null;
 
 
     public void init(ServletConfig config) throws ServletException {
         // TODO Auto-generated method stub
-        cluster = CassandraHosts.getCluster();       
+        cluster = CassandraHosts.getCluster();
     }
 
+    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -45,40 +46,42 @@ public class Login extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        /*
         String username=request.getParameter("username");
         String password=request.getParameter("password");
         
         User us=new User();
         us.setCluster(cluster);
         boolean isValid=us.IsValidUser(username, password);
+        */
         HttpSession session=request.getSession();
         System.out.println("Session in servlet "+session);
-        if (isValid){
-            LoggedIn lg= new LoggedIn();
-            lg.setLogedin();
-            lg.setUsername(username);
+        
+       // if (isValid){
+          // LoggedIn lg= new LoggedIn();
+           // lg.setLogedin();
+            //lg.setUsername(username);
             //request.setAttribute("LoggedIn", lg);
             
-            session.setAttribute("LoggedIn", lg);
+           /* session.setAttribute("LoggedIn", lg);
             System.out.println("Session in servlet "+session);
             RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
-	    rd.forward(request,response);
+	    rd.forward(request,response);*/
             
-        }else{
-            response.sendRedirect("/Instagrim/login.jsp");
-        }
+        //}else{
         
+        LoggedIn lg= new LoggedIn();
+            lg.setLogedout();
+            //lg.setUsername(username);
+            //request.setAttribute("LoggedIn", lg);
+            
+            session.setAttribute("LoggedIn", null);
+            System.out.println("Session in servlet "+session);
+        response.sendRedirect("/Instagrim/login.jsp");
+        //}
         
-        
-    }
-    
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-                RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
-                        rd.forward(request, response);
     }
 
     /**
