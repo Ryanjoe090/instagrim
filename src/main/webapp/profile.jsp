@@ -19,41 +19,41 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <header>
-            <h1>InstaGrim ! </h1>
-            <h2>Ya Profile Fam!! Safe! </h2>
-        </header>
-        <nav>
-            <ul>
+        <div class="container">
+            <div class="row">
+                <h1>InstaGrim ! </h1>
+                <h2>Ya Profile Fam!! Safe! </h2>
+            </div>
+            <nav>
+                <ul>
 
-               
-                <li><a href="upload.jsp">Upload</a></li>
-                    <%
-                        
-                        LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
-                        if (lg != null) {
-                            String UserName = lg.getUsername();
-                            if (lg.getlogedin()) {
-                    %>
 
-                <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                <li><a href="/Instagrim/Logout">Logout</a></li>
-                    <%}
-                            }else{
-                                %>
-                 <li><a href="register.jsp">Register</a></li>
-                <li><a href="login.jsp">Login</a></li>
-                <%
-                                        
-                            
+                    <li><a href="upload.jsp">Upload</a></li>
+                        <%
+
+                            LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                            if (lg != null) {
+                                String UserName = lg.getUsername();
+                                if (lg.getlogedin()) {
+                        %>
+
+                    <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
+                    <li><a href="/Instagrim/Logout">Logout</a></li>
+                        <%}
+                        } else {
+                        %>
+                    <li><a href="register.jsp">Register</a></li>
+                    <li><a href="login.jsp">Login</a></li>
+                        <%
                     }%>
-            </ul>
-        </nav>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/Instagrim">Home</a></li>
-                <li>&COPY; Andy C</li>
-            </ul>
-        </footer>
+                </ul>
+            </nav>
+            <footer>
+                <ul>
+                    <li class="footer"><a href="/Instagrim">Home</a></li>
+                    <li>&COPY; Andy C</li>
+                </ul>
+            </footer>
+        </div>
     </body>
 </html>

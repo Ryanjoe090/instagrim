@@ -22,34 +22,41 @@
     <body>
         <div class="container">
             <div class="row">
-                <header>
+                <div class="col-xs-12">
                     <h1>InstaGrim ! </h1>
                     <h2>Your world in Black and White</h2>
-                </header>
+                </div>
             </div>
-            <nav>
-                <ul>
+            <div class="row row-eq-height">
+                <div class="col-xs-10">
+                    <h1>Weaker</h1>
+                </div>
+                <div class="col-xs-2">
+                    <nav>
+                        <ul>
 
 
-                    <li><a href="upload.jsp">Upload</a></li>
-                        <%
-                            LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
-                            if (lg != null) {
-                                String UserName = lg.getUsername();
-                                if (lg.getlogedin()) {
-                        %>
+                            <li><a href="upload.jsp">Upload</a></li>
+                                <%
+                                    LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                                    if (lg != null) {
+                                        String UserName = lg.getUsername();
+                                        if (lg.getlogedin()) {
+                                %>
 
-                    <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                    <li><a href="/Instagrim/Logout">Logout</a></li>
-                        <%}
-                        } else {
-                        %>
-                    <li><a href="/Instagrim/Register">Register</a></li>
-                    <li><a href="/Instagrim/Login">Login</a></li>
-                        <%
-                    }%>
-                </ul>
-            </nav>
+                            <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
+                            <li><a href="/Instagrim/Logout">Logout</a></li>
+                                <%}
+                                } else {
+                                %>
+                            <li><a href="/Instagrim/Register">Register</a></li>
+                            <li><a href="/Instagrim/Login">Login</a></li>
+                                <%
+                                    }%>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
             <footer>
                 <ul>
                     <li class="footer"><a href="/Instagrim">Home</a></li>
