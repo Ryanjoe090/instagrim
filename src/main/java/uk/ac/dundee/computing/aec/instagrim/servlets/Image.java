@@ -103,6 +103,8 @@ public class Image extends HttpServlet {
         rd.forward(request, response);
 
     }
+    
+    
 
     private void DisplayImage(int type,String Image, HttpServletResponse response) throws ServletException, IOException {
         PicModel tm = new PicModel();
@@ -146,7 +148,8 @@ public class Image extends HttpServlet {
                 System.out.println("Length : " + b.length);
                 PicModel tm = new PicModel();
                 tm.setCluster(cluster);
-                String uuid = tm.insertPic(b, type, filename, username);
+                int pro = 0; //This tells me if it is a profile pic or not. In this case not
+                String uuid = tm.insertPic(b, type, filename, username, pro);
 
                 is.close();
                 

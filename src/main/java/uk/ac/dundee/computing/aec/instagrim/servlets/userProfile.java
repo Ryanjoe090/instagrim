@@ -6,11 +6,17 @@
 package uk.ac.dundee.computing.aec.instagrim.servlets;
 
 import com.datastax.driver.core.Cluster;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +28,16 @@ import uk.ac.dundee.computing.aec.instagrim.lib.Convertors;
 import uk.ac.dundee.computing.aec.instagrim.models.PicModel;
 import uk.ac.dundee.computing.aec.instagrim.models.User;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
+import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
 import uk.ac.dundee.computing.aec.instagrim.stores.Profile;
 
 /**
  *
  * @author Administrator
  */
-@WebServlet(name = "userProfile", urlPatterns = {"/userProfile","/userProfile/*"})
+@WebServlet(name = "userProfile", urlPatterns = {"/userProfile","/userProfile/*","/userThumb/*","/userPic/*"})
+@MultipartConfig
+
 /**
  *
  * @author Think
@@ -36,6 +45,16 @@ import uk.ac.dundee.computing.aec.instagrim.stores.Profile;
 public class userProfile extends HttpServlet {
 
     Cluster cluster = null;
+    private HashMap CommandsMap = new HashMap();
+    
+    public userProfile() {
+        super();
+        // TODO Auto-generated constructor stub
+        CommandsMap.put("userPic", 1);
+        CommandsMap.put("userProfile", 2);
+        CommandsMap.put("userThumb", 3);
+
+    }
 
     public void init(ServletConfig config) throws ServletException {
         // TODO Auto-generated method stub
@@ -54,11 +73,34 @@ public class userProfile extends HttpServlet {
         user.setCluster(cluster);
         HttpSession session = request.getSession();
         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+        String args[] = Convertors.SplitRequestPath(request);
         /*if (lg != null) {
             //String userName = lg.getUsername();
             Profile profile = user.getDetials(userName);
         }*/
+        int command;
+        try {
+            command = (Integer) CommandsMap.get(args[1]);
+        } catch (Exception et) {
+            System.out.println("This one?");
+            error("Bad Operator", response);
+            return;
+        }
+        switch (command) {
+            case 1:
+                DisplayImage(Convertors.DISPLAY_PROCESSED,args[2], response);
+                break;
+            case 2:
+                displayProfilePic(args[2], request, response);
+                break;
+            case 3:
+                DisplayImage(Convertors.DISPLAY_THUMB,args[2],  response);
+                break;
+            default:
+                error("Bad Operator", response);
+        }
         Profile profile = user.getDetials(userName);
+        //displayProfilePic(args[2], request, response);
         request.setAttribute("username", userName);
         request.setAttribute("firstName", profile.getFirstName());
         request.setAttribute("secondName", profile.getSecondName());
@@ -66,8 +108,51 @@ public class userProfile extends HttpServlet {
         request.setAttribute("street", profile.getStreet());
         request.setAttribute("city", profile.getCity());
         request.setAttribute("postCode", profile.getPostCode());
+        
         RequestDispatcher rd = request.getRequestDispatcher("/profile.jsp");
         rd.forward(request, response);
+    }
+    
+    private void displayProfilePic(String User, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PicModel tm = new PicModel();
+        tm.setCluster(cluster);
+        //Pic pic = tm.getProfilePic(User);
+        java.util.LinkedList<Pic> lsPics = tm.getProfilePic(User);
+        System.out.println("Got here");
+        request.setAttribute("profilePic", lsPics);
+        //RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
+        
+    }
+    
+    private void DisplayImage(int type,String Image, HttpServletResponse response) throws ServletException, IOException {
+        PicModel tm = new PicModel();
+        tm.setCluster(cluster);
+  
+        
+        Pic p = tm.getUserPic(type,java.util.UUID.fromString(Image));
+        
+        OutputStream out = response.getOutputStream();
+
+        response.setContentType(p.getType());
+        response.setContentLength(p.getLength());
+        //out.write(Image);
+        InputStream is = new ByteArrayInputStream(p.getBytes());
+        BufferedInputStream input = new BufferedInputStream(is);
+        byte[] buffer = new byte[8192];
+        for (int length = 0; (length = input.read(buffer)) > 0;) {
+            out.write(buffer, 0, length);
+        }
+        out.close();
+    }
+    
+    private void error(String mess, HttpServletResponse response) throws ServletException, IOException {
+
+        PrintWriter out = null;
+        out = new PrintWriter(response.getOutputStream());
+        out.println("<h1>You have a na error in your input</h1>");
+        out.println("<h2>" + mess + "</h2>");
+        out.close();
+        return;
     }
     
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -91,11 +176,12 @@ public class userProfile extends HttpServlet {
                 System.out.println("Length : " + b.length);
                 PicModel tm = new PicModel();
                 tm.setCluster(cluster);
-                String uuid = tm.insertPic(b, type, filename, username);
+                int pro = 1; //Tells me if profile pic, in this case aye
+                String uuid = tm.insertPic(b, type, filename, username, pro);
 
                 is.close();
                 
-             response.sendRedirect("/Instagrim/Image/"+uuid);
+             response.sendRedirect("/Instagrim/");
             }
             
            // RequestDispatcher rd = request.getRequestDispatcher("/upload.jsp");

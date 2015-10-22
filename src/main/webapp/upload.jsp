@@ -32,7 +32,7 @@
 
         <article>
             <h3>File Upload</h3>
-            <form method="POST" enctype="multipart/form-data" action="userProfile">
+            <form method="POST" enctype="multipart/form-data" action="Image">
                 File to upload: <input type="file" name="upfile"><br/>
 
                 <br/>

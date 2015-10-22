@@ -4,6 +4,7 @@
     Author     : Think
 --%>
 
+<%@page import="java.util.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
 <!DOCTYPE html>
@@ -28,6 +29,27 @@
             </div>
             <div class="row">
                 <div class="col-xs-10">
+                    <article>
+                        <h1>Your Pics</h1>
+                        <%
+                            java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("profilePic");
+                            if (lsPics == null) {
+                        %>
+                        <p>No Pictures found</p>
+                        <%
+                        } else {
+                            Iterator<Pic> iterator;
+                            iterator = lsPics.iterator();
+                            while (iterator.hasNext()) {
+                                Pic p = (Pic) iterator.next();
+
+                        %>
+                        <a href="/Instagrim/userPic/<%=p.getSUUID()%>" ><img src="/Instagrim/userThumb/<%=p.getSUUID()%>"></a><br/><%
+
+                                }
+                            }
+                            %>
+                    </article>
                     <ul>
                         <li><label>Username: </label>${username}</li>
                         <li><label>First Name: </label>${firstName}</li>
@@ -45,7 +67,6 @@
 
                             <li><a href="upload.jsp">Upload</a></li>
                                 <%
-
                                     LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
                                     if (lg != null) {
                                         String UserName = lg.getUsername();
@@ -64,6 +85,16 @@
                         </ul>
                     </nav>
                 </div>
+                <article>
+                    <h3>File Upload</h3>
+                    <form method="POST" enctype="multipart/form-data" action="userProfile">
+                        File to upload: <input type="file" name="upfile"><br/>
+
+                        <br/>
+                        <input type="submit" value="Press"> to upload the file!
+                    </form>
+
+                </article>
             </div>
             <footer>
                 <ul>
