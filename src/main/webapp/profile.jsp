@@ -22,32 +22,34 @@
         <div class="container">
             <div class="row">
                 <h1>InstaGrim ! </h1>
-                <h2>Ya Profile Fam!! Safe! </h2>
+                <h2>Ya Profile Fam!! Safe!!!!!</h2>
             </div>
-            <nav>
-                <ul>
+            <div class="row">
+                <nav>
+                    <ul>
 
 
-                    <li><a href="upload.jsp">Upload</a></li>
-                        <%
+                        <li><a href="upload.jsp">Upload</a></li>
+                            <%
 
-                            LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
-                            if (lg != null) {
-                                String UserName = lg.getUsername();
-                                if (lg.getlogedin()) {
-                        %>
+                                LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                                if (lg != null) {
+                                    String UserName = lg.getUsername();
+                                    if (lg.getlogedin()) {
+                            %>
 
-                    <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                    <li><a href="/Instagrim/Logout">Logout</a></li>
-                        <%}
-                        } else {
-                        %>
-                    <li><a href="register.jsp">Register</a></li>
-                    <li><a href="login.jsp">Login</a></li>
-                        <%
-                    }%>
-                </ul>
-            </nav>
+                        <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
+                        <li><a href="/Instagrim/Logout">Logout</a></li>
+                            <%}
+                            } else {
+                            %>
+                        <li><a href="register.jsp">Register</a></li>
+                        <li><a href="login.jsp">Login</a></li>
+                            <%
+                            }%>
+                    </ul>
+                </nav>
+            </div>
             <footer>
                 <ul>
                     <li class="footer"><a href="/Instagrim">Home</a></li>
