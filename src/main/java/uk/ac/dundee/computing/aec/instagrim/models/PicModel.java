@@ -41,6 +41,7 @@ import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
 public class PicModel {
 
     Cluster cluster;
+    String k;
 
     public void PicModel() {
 
