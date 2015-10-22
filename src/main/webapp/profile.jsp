@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-xs-10">
                     <article>
-                        <h1>Your Pics</h1>
+                        <h1>Ya Detials Fam</h1>
                         <%
                             java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("profilePic");
                             if (lsPics == null) {
