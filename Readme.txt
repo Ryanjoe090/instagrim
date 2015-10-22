@@ -1,10 +1,13 @@
-Instagrim  is an example web app using Cassandra as a back end.   The app allows picture uploads, creates a thumbnail and 
+﻿Instagrim  is an example web app using Cassandra as a back end.   The app allows picture uploads, creates a thumbnail and 
 a  B/W version of the picture, and a simple login.
 
 See Keyspaces.java for a definition of the keyspaces.
 CassandraHosts manages the connections. 
 The code uses org.imgscalr.Scalr for image manipulation
 It is a Netbeans maven based project.
+
+
+.....
 
 
 The code is used as an example for AC32007, School of Computing, Univeristy of Dundee.
