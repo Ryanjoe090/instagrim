@@ -21,34 +21,49 @@
     <body>
         <div class="container">
             <div class="row">
-                <h1>InstaGrim ! </h1>
-                <h2>Ya Profile Fam!! Safe!!!!!</h2>
+                <div class="col-xs-12">
+                    <h1>InstaGrim ! </h1>
+                    <h2>Ya Profile Fam!! Safe!!!!!</h2>
+                </div>
             </div>
             <div class="row">
-                <nav>
+                <div class="col-xs-10">
                     <ul>
-
-
-                        <li><a href="upload.jsp">Upload</a></li>
-                            <%
-
-                                LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
-                                if (lg != null) {
-                                    String UserName = lg.getUsername();
-                                    if (lg.getlogedin()) {
-                            %>
-
-                        <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                        <li><a href="/Instagrim/Logout">Logout</a></li>
-                            <%}
-                            } else {
-                            %>
-                        <li><a href="register.jsp">Register</a></li>
-                        <li><a href="login.jsp">Login</a></li>
-                            <%
-                            }%>
+                        <li><label>Username: </label>${username}</li>
+                        <li><label>First Name: </label>${firstName}</li>
+                        <li><label>Second Name: </label>${secondName}</li>
+                        <li><label>Email: </label>${email}</li>
+                        <li><label>Street: </label>${street}</li>
+                        <li><label>City: </label>${city}</li>
+                        <li><label>Postcode: </label>${postCode}</li>
                     </ul>
-                </nav>
+                </div>
+                <div class="col-xs-2">
+                    <nav>
+                        <ul>
+
+
+                            <li><a href="upload.jsp">Upload</a></li>
+                                <%
+
+                                    LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                                    if (lg != null) {
+                                        String UserName = lg.getUsername();
+                                        if (lg.getlogedin()) {
+                                %>
+
+                            <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
+                            <li><a href="/Instagrim/Logout">Logout</a></li>
+                                <%}
+                                } else {
+                                %>
+                            <li><a href="register.jsp">Register</a></li>
+                            <li><a href="login.jsp">Login</a></li>
+                                <%
+                                    }%>
+                        </ul>
+                    </nav>
+                </div>
             </div>
             <footer>
                 <ul>

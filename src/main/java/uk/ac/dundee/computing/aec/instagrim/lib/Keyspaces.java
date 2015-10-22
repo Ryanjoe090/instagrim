@@ -30,6 +30,21 @@ public final class Keyspaces {
                     + " name  varchar,"
                     + " PRIMARY KEY (picid)"
                     + ")";
+            String CreateProfilePicTable = "CREATE TABLE if not exists instagrim.profilePic ("
+                    + " user varchar,"
+                    + " picid uuid, "
+                    + " interaction_time timestamp,"
+                    + " title varchar,"
+                    + " image blob,"
+                    + " thumb blob,"
+                    + " processed blob,"
+                    + " imagelength int,"
+                    + " thumblength int,"
+                    + "  processedlength int,"
+                    + " type  varchar,"
+                    + " name  varchar,"
+                    + " PRIMARY KEY (picid)"
+                    + ")";
             String Createuserpiclist = "CREATE TABLE if not exists instagrim.userpiclist (\n"
                     + "picid uuid,\n"
                     + "user varchar,\n"
@@ -69,7 +84,7 @@ public final class Keyspaces {
                 SimpleStatement cqlQuery = new SimpleStatement(CreatePicTable);
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create tweet table " + et);
+                System.out.println("Can't create pic table " + et);
             }
             System.out.println("" + Createuserpiclist);
 
@@ -91,7 +106,14 @@ public final class Keyspaces {
                 SimpleStatement cqlQuery = new SimpleStatement(CreateUserProfile);
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create Address Profile " + et);
+                System.out.println("Can't create Profile Table " + et);
+            }
+            System.out.println("" + CreateProfilePicTable);
+            try {
+                SimpleStatement cqlQuery = new SimpleStatement(CreateProfilePicTable);
+                session.execute(cqlQuery);
+            } catch (Exception et) {
+                System.out.println("Can't create Profile pic table " + et);
             }
             session.close();
 
