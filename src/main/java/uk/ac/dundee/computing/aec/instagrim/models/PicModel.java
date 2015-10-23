@@ -310,34 +310,38 @@ public class PicModel {
 
     }
 
+    /**
+     * This method checks if the user already has a profile pic and if so it deletes it. If not it just does nothing.
+     * @param user 
+     */
     public void profilePicExists(String user) {
         Session session = cluster.connect("instagrim");
-        PreparedStatement ps = session.prepare("select picid from profilepiclist where user =?");
+        PreparedStatement ps = session.prepare("select picid from profilepiclist where user =?"); //get the pic id
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
                 boundStatement.bind( // here you are binding the 'boundStatement'
                         user));
-        if (rs.isExhausted()) {
+        if (rs.isExhausted()) { //If there is no current profile pic
             System.out.println("No Profile pic returned");
             //return null;
         } else {
-            java.util.UUID UUID = null;
-            for(Row row : rs)
+            java.util.UUID UUID = null; //create a UUID to store one pulled from cql result
+            for(Row row : rs) //put the result set into a row
             {
-              UUID = row.getUUID("picid");
+              UUID = row.getUUID("picid"); //set the UUID from the one from the row
             }
             System.out.println("Profile pic detected. Launch nukes on " + rs.toString());
-            PreparedStatement psDelUserPic = session.prepare("DELETE FROM profilepic where picid =?");
-            PreparedStatement psDelUserIndex = session.prepare("DELETE FROM profilepiclist where user =?");
+            PreparedStatement psDelUserPic = session.prepare("DELETE FROM profilepic where picid =?"); //Delete actual picture for user
+            PreparedStatement psDelUserIndex = session.prepare("DELETE FROM profilepiclist where user =?"); //Delete the picture index row for user
             BoundStatement bsDelPic = new BoundStatement(psDelUserPic);
             BoundStatement bsDelIndex = new BoundStatement(psDelUserIndex);
-            session.execute(bsDelPic.bind(UUID));
+            session.execute(bsDelPic.bind(UUID)); 
             session.execute(bsDelIndex.bind(user));
 
-            session.close();
 
         }
+        session.close();
     }
 
 }
