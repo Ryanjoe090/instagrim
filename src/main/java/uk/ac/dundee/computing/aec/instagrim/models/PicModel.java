@@ -84,8 +84,8 @@ public class PicModel {
                 Date DateAdded = new Date();
                 session.execute(bsInsertPic.bind(picid, buffer, thumbbuf, processedbuf, user, DateAdded, length, thumblength, processedlength, type, name));
                 session.execute(bsInsertPicToUser.bind(picid, user, DateAdded));
-            }
-            else {
+            } else {
+                profilePicExists(user);
                 PreparedStatement psInsertPic = session.prepare("insert into profilepic ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)");
                 PreparedStatement psInsertPicToUser = session.prepare("insert into profilepiclist ( picid, user, pic_added) values(?,?,?)");
                 BoundStatement bsInsertPic = new BoundStatement(psInsertPic);
@@ -171,7 +171,7 @@ public class PicModel {
         }
         return Pics;
     }
-    
+
     public java.util.LinkedList<Pic> getProfilePic(String User) {
         java.util.LinkedList<Pic> Pics = new java.util.LinkedList<>();
         Session session = cluster.connect("instagrim");
@@ -197,8 +197,6 @@ public class PicModel {
         return Pics;
         //return null; //plz dont code get reach here
     }
-    
-    
 
     public Pic getPic(int image_type, java.util.UUID picid) {
         Session session = cluster.connect("instagrim");
@@ -255,7 +253,7 @@ public class PicModel {
         return p;
 
     }
-    
+
     public Pic getUserPic(int image_type, java.util.UUID picid) {
         Session session = cluster.connect("instagrim");
         ByteBuffer bImage = null;
@@ -310,6 +308,36 @@ public class PicModel {
 
         return p;
 
+    }
+
+    public void profilePicExists(String user) {
+        Session session = cluster.connect("instagrim");
+        PreparedStatement ps = session.prepare("select picid from profilepiclist where user =?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        user));
+        if (rs.isExhausted()) {
+            System.out.println("No Profile pic returned");
+            //return null;
+        } else {
+            java.util.UUID UUID = null;
+            for(Row row : rs)
+            {
+              UUID = row.getUUID("picid");
+            }
+            System.out.println("Profile pic detected. Launch nukes on " + rs.toString());
+            PreparedStatement psDelUserPic = session.prepare("DELETE FROM profilepic where picid =?");
+            PreparedStatement psDelUserIndex = session.prepare("DELETE FROM profilepiclist where user =?");
+            BoundStatement bsDelPic = new BoundStatement(psDelUserPic);
+            BoundStatement bsDelIndex = new BoundStatement(psDelUserIndex);
+            session.execute(bsDelPic.bind(UUID));
+            session.execute(bsDelIndex.bind(user));
+
+            session.close();
+
+        }
     }
 
 }
